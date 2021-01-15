@@ -1,6 +1,6 @@
 'use strict';
 
-const { promises: { readFile } } = require('fs')
+const { get } = require('axios')
 
 class Handler {
   constructor({ rekoSvc, translatorSvc }) {
@@ -45,18 +45,30 @@ class Handler {
       const nameInPortuguese = texts[indexText]
       const confidence = workingItems[indexText].Confidence
       finalText.push(
-        ` ${confidence.toFixed(2)}% ser do tipo ${nameInPortuguese}`
+        `Precisão: ${confidence.toFixed(2)}% de ser do tipo ${nameInPortuguese}`
       )
     }
 
     return finalText.join('\n')
   }
 
+  async getImageBuffer(imageUrl) {
+    const response = await get(imageUrl, {
+      responseType: 'arraybuffer'
+    })
+
+    const buffer = Buffer.from(response.data, 'base64')
+
+    return buffer
+  }
+
   async main(event) {
     try {
-      const imgBuffer = await readFile('./images/cat.jpg')
+      const { imageUrl } = event.queryStringParameters
+      console.log('downloading image...')
+      const buffer = await this.getImageBuffer(imageUrl)
       console.log('Detecting labels...')
-      const { names, workingItems } = await this.detectImageLabels(imgBuffer)
+      const { names, workingItems } = await this.detectImageLabels(buffer)
       
       console.log('Translating to Portuguese...')
       const texts = await this.translateText(names)
@@ -67,13 +79,13 @@ class Handler {
 
       return {
         statusCode: 200,
-        body: `A imagem tem\n `.concat(finalText)
+        body: `A imagem tem\n`.concat(finalText)
       }
     } catch (error) {
       console.log('Error***', error.stack)
       return {
         statusCode: 500,
-        body: 'Internal server error!'
+        body: 'Imagem não inserida ou falha no reconhecimento!'
       }
     }
   }
