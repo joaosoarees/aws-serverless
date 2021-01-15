@@ -25,7 +25,7 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
   environment:
-    DYNAMODB_TABLE: Heroes
+    DYNAMODB_TABLE: Heroes_Table
   iamRoleStatements:
     - Effect: Allow
       Action:
