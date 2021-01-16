@@ -1,9 +1,17 @@
 const uuid = require('uuid')
+const Joi = require('@hapi/joi')
 
 class Handler {
   constructor({ dynamoDbSvc }) {
     this.dynamoDbSvc = dynamoDbSvc
     this.dynamodbTable = process.env.DYNAMODB_TABLE
+  }
+
+  static validator() {
+    return Joi.object({
+      name: Joi.string().max(100).min(2).required(),
+      power: Joi.string().max(20).required()
+    })
   }
 
   async insertItem(params) {
@@ -45,10 +53,20 @@ class Handler {
   async main(event) {
     try {
       const data = JSON.parse(event.body)
-      const dbParams = this.prepareData(data)
-      await this.insertItem(dbParams)
+      const { error, value } = await Handler.validator().validate(data)
+      console.log({
+        error,
+        value
+      })
+      return {
+        statusCode: 200,
+        body: 'Tudo certo'
+      }
+      // const dbParams = this.prepareData(data)
+      
+      // await this.insertItem(dbParams)
 
-      return this.handleSuccess(dbParams.Item)
+      // return this.handleSuccess(dbParams.Item)
     }
     catch (error) {
       console.error('Something went wrong!', error.stack)
