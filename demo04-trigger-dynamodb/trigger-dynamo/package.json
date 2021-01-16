@@ -9,7 +9,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "invoke-local": "sls invoke local -f hero-insert --path requests-mock/hero.insert.json"
+    "invoke-local": "sls invoke local -f hero-insert --path requests-mock/hero.insert.json",
+    "invoke": "sls invoke -f hero-insert --path requests-mock/hero.insert.json"
   },
   "keywords": [],
   "author": "",
