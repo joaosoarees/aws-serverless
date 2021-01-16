@@ -1,6 +1,9 @@
 const uuid = require('uuid')
 const Joi = require('@hapi/joi')
 
+const decoratorValidator = require('./utils/decorator/Validator')
+const globalEnum = require('./utils/globalEnum')
+
 class Handler {
   constructor({ dynamoDbSvc }) {
     this.dynamoDbSvc = dynamoDbSvc
@@ -52,21 +55,14 @@ class Handler {
 
   async main(event) {
     try {
-      const data = JSON.parse(event.body)
-      const { error, value } = await Handler.validator().validate(data)
-      console.log({
-        error,
-        value
-      })
-      return {
-        statusCode: 200,
-        body: 'Tudo certo'
-      }
-      // const dbParams = this.prepareData(data)
-      
-      // await this.insertItem(dbParams)
+      // agora o decorator modifica o body e já
+      // retorna no formato JSON
+      const data = event.body
 
-      // return this.handleSuccess(dbParams.Item)
+      const dbParams = this.prepareData(data)
+      await this.insertItem(dbParams)
+      return this.handleSuccess(dbParams.Item)
+
     }
     catch (error) {
       console.error('Something went wrong!', error.stack)
@@ -82,4 +78,8 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient()
 const handler = new Handler({
   dynamoDbSvc: dynamoDB
 })
-module.exports = handler.main.bind(handler)
+module.exports = decoratorValidator(
+  handler.main.bind(handler),
+  Handler.validator(),
+  globalEnum.ARG_TYPE.BODY
+)
