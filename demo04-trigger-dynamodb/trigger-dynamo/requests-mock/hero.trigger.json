@@ -1,0 +1,40 @@
+{
+  "Records": [
+    {
+      "eventID": "80e63bbe4f40178c8ecb4da8753e6670",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1610834992,
+        "Keys": {
+          "name": {
+            "S": "Green Lantern"
+          },
+          "id": {
+            "S": "8e803020-5847-11eb-953b-c18cd477fb15"
+          }
+        },
+        "NewImage": {
+          "createdAt": {
+            "S": "2021-01-16T22:09:52.162Z"
+          },
+          "name": {
+            "S": "Green Lantern"
+          },
+          "id": {
+            "S": "8e803020-5847-11eb-953b-c18cd477fb15"
+          },
+          "power": {
+            "S": "Ring"
+          }
+        },
+        "SequenceNumber": "4026800000000004841744798",
+        "SizeBytes": 152,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:540710804605:table/Heroes_Table/stream/2021-01-16T22:08:20.467"
+    }
+  ]
+}
