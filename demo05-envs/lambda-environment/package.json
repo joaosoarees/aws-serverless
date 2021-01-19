@@ -5,9 +5,13 @@
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "invoke-local": "sls invoke local -f commit-message-scheduler --logger"
+    "invoke-local-qa": "sls invoke local --stage qa -f commit-message-scheduler --logger",
+    "invoke-local-prod": "sls invoke local --stage prod -f commit-message-scheduler --logger"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "env-var": "^7.0.0"
+  }
 }
